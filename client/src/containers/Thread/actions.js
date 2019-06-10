@@ -1,11 +1,11 @@
-import * as postService from 'src/services/postService';
-import * as commentService from 'src/services/commentService';
+import * as postService from "src/services/postService";
+import * as commentService from "src/services/commentService";
 import {
     ADD_POST,
     LOAD_MORE_POSTS,
     SET_ALL_POSTS,
     SET_EXPANDED_POST
-} from './actionTypes';
+} from "./actionTypes";
 
 const setPostsAction = posts => ({
     type: SET_ALL_POSTS,
@@ -27,31 +27,34 @@ const setExpandedPostAction = post => ({
     post
 });
 
-export const loadPosts = filter => async (dispatch) => {
+export const loadPosts = filter => async dispatch => {
     const posts = await postService.getAllPosts(filter);
     dispatch(setPostsAction(posts));
 };
 
 export const loadMorePosts = filter => async (dispatch, getRootState) => {
-    const { posts: { posts } } = getRootState();
+    const {
+        posts: { posts }
+    } = getRootState();
     const loadedPosts = await postService.getAllPosts(filter);
-    const filteredPosts = loadedPosts
-        .filter(post => !(posts && posts.some(loadedPost => post.id === loadedPost.id)));
+    const filteredPosts = loadedPosts.filter(
+        post => !(posts && posts.some(loadedPost => post.id === loadedPost.id))
+    );
     dispatch(addMorePostsAction(filteredPosts));
 };
 
-export const applyPost = postId => async (dispatch) => {
+export const applyPost = postId => async dispatch => {
     const post = await postService.getPost(postId);
     dispatch(addPostAction(post));
 };
 
-export const addPost = post => async (dispatch) => {
+export const addPost = post => async dispatch => {
     const { id } = await postService.addPost(post);
     const newPost = await postService.getPost(id);
     dispatch(addPostAction(newPost));
 };
 
-export const toggleExpandedPost = postId => async (dispatch) => {
+export const toggleExpandedPost = postId => async dispatch => {
     const post = postId ? await postService.getPost(postId) : undefined;
     dispatch(setExpandedPostAction(post));
 };
@@ -65,8 +68,12 @@ export const likePost = postId => async (dispatch, getRootState) => {
         likeCount: Number(post.likeCount) + diff // diff is taken from the current closure
     });
 
-    const { posts: { posts, expandedPost } } = getRootState();
-    const updated = posts.map(post => (post.id !== postId ? post : mapLikes(post)));
+    const {
+        posts: { posts, expandedPost }
+    } = getRootState();
+    const updated = posts.map(post =>
+        post.id !== postId ? post : mapLikes(post)
+    );
 
     dispatch(setPostsAction(updated));
 
@@ -85,10 +92,12 @@ export const addComment = request => async (dispatch, getRootState) => {
         comments: [...(post.comments || []), comment] // comment is taken from the current closure
     });
 
-    const { posts: { posts, expandedPost } } = getRootState();
-    const updated = posts.map(post => (post.id !== comment.postId
-        ? post
-        : mapComments(post)));
+    const {
+        posts: { posts, expandedPost }
+    } = getRootState();
+    const updated = posts.map(post =>
+        post.id !== comment.postId ? post : mapComments(post)
+    );
 
     dispatch(setPostsAction(updated));
 

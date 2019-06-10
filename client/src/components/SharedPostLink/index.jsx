@@ -1,17 +1,17 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Modal, Input, Icon } from 'semantic-ui-react';
+import React from "react";
+import PropTypes from "prop-types";
+import { Modal, Input, Icon } from "semantic-ui-react";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 class SharedPostLink extends React.Component {
     state = {
         copied: false
     };
 
-    copyToClipboard = (e) => {
+    copyToClipboard = e => {
         this.input.select();
-        document.execCommand('copy');
+        document.execCommand("copy");
         e.target.focus();
         this.setState({ copied: true });
     };
@@ -33,9 +33,17 @@ class SharedPostLink extends React.Component {
                 <Modal.Content>
                     <Input
                         fluid
-                        action={{ color: 'teal', labelPosition: 'right', icon: 'copy', content: 'Copy', onClick: this.copyToClipboard }}
+                        action={{
+                            color: "teal",
+                            labelPosition: "right",
+                            icon: "copy",
+                            content: "Copy",
+                            onClick: this.copyToClipboard
+                        }}
                         value={`${window.location.origin}/share/${postId}`}
-                        ref={(input) => { this.input = input; }}
+                        ref={input => {
+                            this.input = input;
+                        }}
                     />
                 </Modal.Content>
             </Modal>

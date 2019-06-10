@@ -1,12 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Form, Button } from 'semantic-ui-react';
+import React from "react";
+import PropTypes from "prop-types";
+import { Form, Button } from "semantic-ui-react";
 
 class AddComment extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            body: ''
+            body: ""
         };
     }
 
@@ -17,8 +17,8 @@ class AddComment extends React.Component {
         }
         const { postId } = this.props;
         await this.props.addComment({ postId, body });
-        this.setState({ body: '' });
-    }
+        this.setState({ body: "" });
+    };
 
     render() {
         const { body } = this.state;
@@ -29,7 +29,13 @@ class AddComment extends React.Component {
                     placeholder="Type a comment..."
                     onChange={ev => this.setState({ body: ev.target.value })}
                 />
-                <Button type="submit" content="Post comment" labelPosition="left" icon="edit" primary />
+                <Button
+                    type="submit"
+                    content="Post comment"
+                    labelPosition="left"
+                    icon="edit"
+                    primary
+                />
             </Form>
         );
     }

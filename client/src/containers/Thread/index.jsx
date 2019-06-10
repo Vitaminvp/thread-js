@@ -1,17 +1,23 @@
-import React from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import * as imageService from 'src/services/imageService';
-import ExpandedPost from 'src/containers/ExpandedPost';
-import Post from 'src/components/Post';
-import AddPost from 'src/components/AddPost';
-import SharedPostLink from 'src/components/SharedPostLink';
-import { Checkbox, Loader } from 'semantic-ui-react';
-import InfiniteScroll from 'react-infinite-scroller';
-import { loadPosts, loadMorePosts, likePost, toggleExpandedPost, addPost } from './actions';
+import React from "react";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import * as imageService from "src/services/imageService";
+import ExpandedPost from "src/containers/ExpandedPost";
+import Post from "src/components/Post";
+import AddPost from "src/components/AddPost";
+import SharedPostLink from "src/components/SharedPostLink";
+import { Checkbox, Loader } from "semantic-ui-react";
+import InfiniteScroll from "react-infinite-scroller";
+import {
+    loadPosts,
+    loadMorePosts,
+    likePost,
+    toggleExpandedPost,
+    addPost
+} from "./actions";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 class Thread extends React.Component {
     constructor(props) {
@@ -32,7 +38,9 @@ class Thread extends React.Component {
             ({ showOwnPosts }) => ({ showOwnPosts: !showOwnPosts }),
             () => {
                 Object.assign(this.postsFilter, {
-                    userId: this.state.showOwnPosts ? this.props.userId : undefined,
+                    userId: this.state.showOwnPosts
+                        ? this.props.userId
+                        : undefined,
                     from: 0
                 });
                 this.props.loadPosts(this.postsFilter);
@@ -45,15 +53,15 @@ class Thread extends React.Component {
         this.props.loadMorePosts(this.postsFilter);
         const { from, count } = this.postsFilter;
         this.postsFilter.from = from + count;
-    }
+    };
 
-    sharePost = (sharedPostId) => {
+    sharePost = sharedPostId => {
         this.setState({ sharedPostId });
     };
 
     closeSharePost = () => {
         this.setState({ sharedPostId: undefined });
-    }
+    };
 
     uploadImage = file => imageService.uploadImage(file);
 
@@ -63,10 +71,18 @@ class Thread extends React.Component {
         return (
             <div className={styles.threadContent}>
                 <div className={styles.addPostForm}>
-                    <AddPost addPost={props.addPost} uploadImage={this.uploadImage} />
+                    <AddPost
+                        addPost={props.addPost}
+                        uploadImage={this.uploadImage}
+                    />
                 </div>
                 <div className={styles.toolbar}>
-                    <Checkbox toggle label="Show only my posts" checked={showOwnPosts} onChange={this.tooglePosts} />
+                    <Checkbox
+                        toggle
+                        label="Show only my posts"
+                        checked={showOwnPosts}
+                        onChange={this.tooglePosts}
+                    />
                 </div>
                 <InfiniteScroll
                     pageStart={0}
@@ -84,14 +100,13 @@ class Thread extends React.Component {
                         />
                     ))}
                 </InfiniteScroll>
-                {
-                    expandedPost
-                    && <ExpandedPost sharePost={this.sharePost} />
-                }
-                {
-                    sharedPostId
-                    && <SharedPostLink postId={sharedPostId} close={this.closeSharePost} />
-                }
+                {expandedPost && <ExpandedPost sharePost={this.sharePost} />}
+                {sharedPostId && (
+                    <SharedPostLink
+                        postId={sharedPostId}
+                        close={this.closeSharePost}
+                    />
+                )}
             </div>
         );
     }
